@@ -143,17 +143,11 @@ def generate_tts(text: str, voice: str, rate: str) -> bytes | None:
         return None
 
 def inject_audio(audio_bytes: bytes, uid: str):
-    """Inyecta el audio UNA sola vez usando uid para evitar repeats."""
+    """Reproduce el audio UNA sola vez. st.audio evita el buffering intermedio."""
     if st.session_state.pending_audio_id == uid:
         return
-    b64 = base64.b64encode(audio_bytes).decode()
-    st.markdown(
-        f'<audio autoplay style="display:none" id="aud_{uid}">'
-        f'<source src="data:audio/mpeg;base64,{b64}" type="audio/mpeg">'
-        f'</audio>',
-        unsafe_allow_html=True,
-    )
     st.session_state.pending_audio_id = uid
+    st.audio(audio_bytes, format="audio/mp3", autoplay=True)
 
 # ── STT: Groq Whisper ─────────────────────────────────────────────────────────
 def transcribe(audio_bytes: bytes, client: Groq) -> str:
