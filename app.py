@@ -124,15 +124,7 @@ async def _tts_async(text: str, voice: str, rate: str) -> bytes:
 def generate_tts(text: str, voice: str, rate: str) -> bytes | None:
     """Limpia el texto y genera audio MP3 completo."""
     clean = text.replace("*","").replace("_","").replace("#","").replace("`","").strip()
-    # Cortar en oración completa si es muy largo
-    if len(clean) > 700:
-        for sep in [". ","! ","? ",", "]:
-            idx = clean.rfind(sep, 0, 700)
-            if idx > 200:
-                clean = clean[:idx+1]
-                break
-        else:
-            clean = clean[:700]
+    # Sin límite de caracteres — el texto se lee completo siempre
     try:
         # Manejar loop de asyncio en todos los entornos
         try:
